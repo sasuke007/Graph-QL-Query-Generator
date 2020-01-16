@@ -1,0 +1,226 @@
+{
+  "operations": [
+    {
+      "name": "createGroup",
+      "info": {
+        "response": "payload.id",
+        "key": "groupId"
+      }
+    },
+    {
+      "name": "updateGroup",
+      "dependencies": [
+        {
+          "key": "input.group.id",
+          "value": "$groupId"
+        },
+        {
+          "key": "input.group.name",
+          "value": "Stark Industries"
+        }
+      ]
+    },
+
+    {
+      "name": "createCompany",
+      "info": {
+        "response": "payload.id",
+        "key": "companyId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$groupId"
+        },
+        {
+          "key": "input.company.emails",
+          "values": ["john@gmail.com"]
+        },
+        {
+          "key": "input.company.website",
+          "value": "http://john.com"
+        }
+      ]
+    },
+    {
+      "name": "createLocation",
+      "info": {
+        "response": "payload.id",
+        "key": "locationId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$companyId"
+        }
+      ]
+    },
+    {
+      "name": "createDepartment",
+      "info": {
+        "response": "payload.id",
+        "key": "departmentId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$companyId"
+        }
+      ]
+    },
+    {
+      "name": "createDesignation",
+      "info": {
+        "response": "payload.id",
+        "key": "designationId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$companyId"
+        }
+      ]
+    },
+    {
+      "name": "createDepartment",
+      "info": {
+        "response": "payload.id",
+        "key": "departmentId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$companyId"
+        }
+      ]
+    },
+    {
+      "name": "createServiceProvider",
+      "info": {
+        "response": "payload.id",
+        "key": "serviceProviderId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$companyId"
+        },
+        {
+          "key": "input.serviceProvider.departmentId",
+          "value": "$departmentId"
+        },
+        {
+          "key": "input.serviceProvider.designationId",
+          "value": "$departmentId"
+        },
+        {
+          "key": "input.serviceProvider.email",
+          "value": "john@gmail.com"
+        }
+      ]
+    },
+    {
+      "name": "createChannel",
+      "info": {
+        "response": "payload.id",
+        "key": "channelId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$locationId"
+        }
+      ]
+    },
+    {
+      "name": "createResourceType",
+      "info": {
+        "response": "payload.id",
+        "key": "resourceTypeId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$locationId"
+        }
+      ]
+    },
+    {
+      "name": "createResource",
+      "info": {
+        "response": "payload.id",
+        "key": "resourceId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$locationId"
+        },
+        {
+          "key": "input.resource.resourceTypeId",
+          "value": "$resourceTypeId"
+        }
+      ]
+    },
+    {
+      "name": "createUserProfile",
+      "info": {
+        "response": "payload.id",
+        "key": "userId"
+      },
+      "dependencies": [
+        {
+          "key": "input.userProfile.email",
+          "value": "goku@appointy.com"
+        }
+      ]
+    },
+    {
+      "name": "createCustomer",
+      "info": {
+        "response": "payload.id",
+        "key": "customerId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$locationId"
+        },
+        {
+          "key": "input.userId",
+          "value": "$resourceTypeId"
+        },
+        {
+          "key": "input.customer.email",
+          "value": "goku@appointy.com"
+        }
+      ]
+    },
+    {
+      "name": "createCategory",
+      "info": {
+        "response": "payload.id",
+        "key": "categoryId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$locationId"
+        }
+      ]
+    },
+    {
+      "name": "createService",
+      "info": {
+        "response": "payload.id",
+        "key": "serviceId"
+      },
+      "dependencies": [
+        {
+          "key": "input.parent",
+          "value": "$locationId"
+        }
+      ]
+    }
+  ]
+}

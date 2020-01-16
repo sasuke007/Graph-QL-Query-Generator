@@ -1,0 +1,31 @@
+package queries
+
+import (
+	"bytes"
+	"encoding/json"
+	"github.com/pkg/errors"
+	"io/ioutil"
+	"net/http"
+)
+
+
+func HttpCall(body string,response interface{}) (error) {
+	url := "https://waqt.appointy.com/graphql"
+	mimeType := "application/json"
+	resp, err := http.Post(url, mimeType, bytes.NewBuffer([]byte(body)))
+	if err != nil {
+		return errors.Wrap(err,"unable to send request")
+	}
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err!= nil{
+		return errors.Wrap(err,"unable to parse response")
+	}
+
+	if err := json.Unmarshal(responseBody, &response);err!= nil{
+		return err
+	}
+
+	return nil
+}
+

@@ -1,0 +1,35 @@
+package main
+	
+import ( 
+	"log"
+	"files/queries"
+)
+
+var StoreResponseFields = make(map[string]string)
+	
+func main(){
+	var nameOfFile = "schema.graphql"
+	fileData, err := queries.ReadFile(nameOfFile)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	schema, err := queries.BuildAst(fileData)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	scalarTypes := queries.StoreScalarTypes(schema)
+	complexTypes := queries.StoreComplexTypes(schema)
+	inputTypes := queries.StoreInputTypes(schema)
+	queriesAndMutations := queries.StoreQueriesAndMutations(schema)
+	enumTypes := queries.StoreEnumTypes(schema)
+	unionTypes := queries.StoreUnionTypes(schema)
+	interfaceTypes := queries.StoreInterfaceTypes(schema)
+	implementsInterface := queries.ImplementsInterface(schema)
+	
+	{{range $element:= .}}
+		if err:=queries.{{$element}}Function(scalarTypes,complexTypes,inputTypes,queriesAndMutations,enumTypes,unionTypes,interfaceTypes,implementsInterface,&StoreResponseFields);err!=nil{
+			log.Fatalln(err)
+		}
+	{{end}}
+}

@@ -1,0 +1,20 @@
+package queries
+
+
+//ek error is file me tab aa sakti hai jab do enums ki first field ka naam same ho 
+//ex jab do enums ki first field ka naam UNSPECIFIED ho tab "UNSPECIFIED redeclared in th block err aa jayegi"
+
+
+{{range $enum:= .}}
+type {{$enum.Name}} string
+{{$name := $enum.Name}}
+const(
+{{range $field:= $enum.Fields}}
+        {{$field}}_{{$enum.NameUpperCase}} {{$name}} = "{{$field}}"
+{{end}}
+)
+
+func {{$name}}Object(){{$name}}{
+    return  {{$enum.FirstField}}_{{$enum.NameUpperCase}}
+}
+{{end}}

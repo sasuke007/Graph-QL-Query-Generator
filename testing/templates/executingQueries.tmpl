@@ -1,0 +1,72 @@
+package queries
+	
+import(
+    "log"
+    "github.com/pkg/errors"
+    "encoding/json"
+    "github.com/vektah/gqlparser/ast"
+	)
+
+type {{.QueryNameUpperCase}}Response struct{
+	Data {{.QueryNameUpperCase}}Data   `json:"data"`
+	Errors []string         `json:"errors"`
+}
+	
+type {{.QueryNameUpperCase}}Data struct{
+	{{.QueryNameUpperCase}}  {{.ResponseType}}  `json:"{{.QueryNameLowerCase}}"`    
+}
+
+type {{.QueryNameUpperCase}}Request struct{
+    {{range $argument:= .Arguments}}
+        {{$argument.UpperCaseKey}} {{$argument.Type}}    `json:"{{$argument.LowerCaseKey}}"`
+    {{end}}
+}
+
+func {{.QueryNameUpperCase}}RequestObject(){{.QueryNameUpperCase}}Request{
+    {{$temp:=.QueryNameUpperCase}}
+    {{range $argument:=.Arguments}}
+        return {{$temp}}Request{
+            {{$argument.UpperCaseKey}}:{{$argument.Value}},
+        }
+    {{end}}
+}
+
+
+func {{.QueryNameUpperCase}}Function(scalarTypes []string,complexTypes map[string][]Fields,inputTypes map[string][]Fields,queriesAndMutations map[string]*ast.FieldDefinition,enumTypes map[string]ast.EnumValueList,unionTypes map[string]*ast.Definition,interfaceTypes map[string]*ast.Definition,implementsInterface map[string]*ast.Definition,StoreResponseFields *map[string]string)error{
+	var response {{.QueryNameUpperCase}}Response
+	request:={{.QueryNameUpperCase}}RequestObject()
+
+    {{if .OverWrite}}
+        {{range $value:= .OverWrite}} 
+            request.{{$value.KeyUpperCase}}={{$value.Value}}
+        {{end}}
+    {{end}}
+
+    data,err:=json.Marshal(request)
+    if err!=nil{
+        errors.Wrap(err,"unable to marshal into struct")
+    }
+
+    log.Println("{{.QueryNameUpperCase}}")
+   log.Println(string(data))
+    operation:=`{ 
+        "query":"{{.Query}}",
+         "variables": `+string(data)+`
+        }`
+
+
+	if err:=HttpCall(operation,&response);err!=nil{
+		return errors.Wrap(err,"error in making http call {{.QueryNameUpperCase}}")
+	}
+    if len(response.Errors)>0{
+        log.Fatalln("resqest successfully send ,error recieved in response {{.QueryNameUpperCase}}",response.Errors)
+    }
+
+   // {{if .Store }}(*StoreResponseFields)["{{.Store.Key}}"]=response.Data.{{.QueryNameUpperCase}}.{{.Store.ResponseUpperCase}}{{end}}
+
+   //log.Println(response)
+   // log.Println(StoreResponseFields)
+
+    return nil
+}
+

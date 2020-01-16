@@ -1,0 +1,12 @@
+package queries
+
+{{range $value:= .}}
+type {{$value.QueryName}} struct{
+    {{range $field := $value.QueryFields}}
+        {{$field.KeyUpperCase}} interface{} `json:"{{$field.KeyLowerCase}}"`
+    {{end}}
+}
+
+{{end}}
+
+
